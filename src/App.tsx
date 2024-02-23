@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import globalStyles from "./GlobalStyles";
+import { styled } from "./stitches-theme";
 
 function App() {
   globalStyles();
@@ -16,7 +17,13 @@ function App() {
   //     });
   // }, []);
 
-  return <div>hello</div>;
+  return <Container>hello</Container>;
 }
+
+const Container = styled("div", {
+  border: "1px solid red",
+  height: "100%",
+  "@tabletAndUp": {},
+});
 
 export default App;
