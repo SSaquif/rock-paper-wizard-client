@@ -1,7 +1,7 @@
-// import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import globalStyles from "./GlobalStyles";
 import { styled } from "./stitches-theme";
-
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 function App() {
   globalStyles();
 
@@ -17,13 +17,27 @@ function App() {
   //     });
   // }, []);
 
-  return <Container>hello</Container>;
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // console.log("location", location);
+    if (location.pathname === "/") {
+      navigate("/home");
+    }
+  }, [location]);
+
+  return (
+    <Container>
+      <Outlet />
+    </Container>
+  );
 }
 
 const Container = styled("div", {
   border: "1px solid red",
   height: "100%",
-  "@tabletAndUp": {},
+  backgroundColor: "var(--gray-100)",
 });
 
 export default App;

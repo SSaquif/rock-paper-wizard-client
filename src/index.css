@@ -63,15 +63,15 @@ h6 {
 */
 #root {
   isolation: isolate;
-  --color-gray-50: hsl(210deg, 19%, 10%);
-  --color-gray-100: hsl(210deg, 15%, 20%);
-  --color-gray-200: hsl(210deg, 15%, 25%);
-  --color-gray-300: hsl(210deg, 10%, 40%);
-  --color-gray-400: hsl(210deg, 9%, 45%);
-  --color-gray-500: hsl(210deg, 8%, 50%);
-  --color-gray-600: hsl(210deg, 12%, 55%);
-  --color-gray-700: hsl(210deg, 14%, 66%);
-  --color-gray-800: hsl(210deg, 20%, 77%);
-  --color-gray-900: hsl(210deg, 25%, 88%);
-  --color-gray-1000: hsl(210deg, 25%, 96%);
+  --gray-50: hsl(210deg, 19%, 10%);
+  --gray-100: hsl(210deg, 15%, 20%);
+  --gray-200: hsl(210deg, 15%, 25%);
+  --gray-300: hsl(210deg, 10%, 40%);
+  --gray-400: hsl(210deg, 9%, 45%);
+  --gray-500: hsl(210deg, 8%, 50%);
+  --gray-600: hsl(210deg, 12%, 55%);
+  --gray-700: hsl(210deg, 14%, 66%);
+  --gray-800: hsl(210deg, 20%, 77%);
+  --gray-900: hsl(210deg, 25%, 88%);
+  --gray-1000: hsl(210deg, 25%, 96%);
 }
