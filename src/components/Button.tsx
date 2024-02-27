@@ -8,6 +8,8 @@ const Button = styled("button", {
   borderRadius: "0.5rem",
   border: "none",
   cursor: "pointer",
+  fontWeight: "900",
+  color: "white",
   "&:hover": {
     backgroundColor: "var(--gray-400)",
   },

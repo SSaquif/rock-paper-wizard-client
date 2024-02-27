@@ -59,10 +59,12 @@ h6 {
 }
 /*
   8. Create a root stacking context
-  9. Color Palette
+  9. Add default font-family
+  10. Color Palette
 */
 #root {
   isolation: isolate;
+  font-family: "MedievalSharp", cursive;
   --gray-50: hsl(210deg, 19%, 10%);
   --gray-100: hsl(210deg, 15%, 20%);
   --gray-200: hsl(210deg, 15%, 25%);

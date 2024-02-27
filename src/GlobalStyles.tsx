@@ -10,7 +10,6 @@ const globalStyles = globalCss({
   "#root": {
     height: "inherit",
     width: "inherit",
-    // border: "2px solid red",
   },
 });
 

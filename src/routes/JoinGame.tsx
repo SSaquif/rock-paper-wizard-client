@@ -5,7 +5,7 @@ import BaseButton from "../components/Button";
 function JoinGame() {
   return (
     <Container>
-      <Form>
+      <StyledForm>
         <AvatarContainer>
           {/* todo: replace with proper selectable avatar component */}
           <div
@@ -17,19 +17,19 @@ function JoinGame() {
             }}
           ></div>
         </AvatarContainer>
-        <GameIDContainer>
-          <label htmlFor="gameID">Game ID</label>
-          <input type="text" id="gameID" />
-        </GameIDContainer>
-        <UserNameContainer>
-          <label htmlFor="username">Username</label>
-          <input type="text" id="username" />
-        </UserNameContainer>
+        <FormDataRowContainer>
+          <FormLabel htmlFor="gameID">Game ID</FormLabel>
+          <FormInput type="text" id="gameID" />
+        </FormDataRowContainer>
+        <FormDataRowContainer>
+          <FormLabel htmlFor="username">Username</FormLabel>
+          <FormInput type="text" id="username" />
+        </FormDataRowContainer>
         <ButtonContainer>
           <Button>Cancel</Button>
-          <Button type="submit">Join Game</Button>
+          <Button type="submit">Join</Button>
         </ButtonContainer>
-      </Form>
+      </StyledForm>
     </Container>
   );
 }
@@ -39,6 +39,13 @@ const Container = styled("div", {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  color: "var(--gray-900)",
+});
+
+const StyledForm = styled(Form, {
+  display: "flex",
+  flexDirection: "column",
+  gap: "1rem",
 });
 
 const AvatarContainer = styled("div", {
@@ -48,26 +55,29 @@ const AvatarContainer = styled("div", {
   justifyContent: "center",
 });
 
-const UserNameContainer = styled("div", {
+const FormDataRowContainer = styled("div", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  border: "solid",
+  gap: "1rem",
+  // border: "solid",
   "@tabletAndUp": {
     flexDirection: "row",
   },
 });
 
-const GameIDContainer = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  border: "solid",
-  "@tabletAndUp": {
-    flexDirection: "row",
-  },
+const FormLabel = styled("label", {
+  flexBasis: "40%",
+  fontSize: "1.5rem",
+  fontWeight: "900",
+});
+
+const FormInput = styled("input", {
+  flexBasis: "40%",
+  fontSize: "1.5rem",
+  fontWeight: "900",
+  flexGrow: 0,
 });
 
 const ButtonContainer = styled("div", {
@@ -75,6 +85,7 @@ const ButtonContainer = styled("div", {
   justifyContent: "center",
 });
 
+// todo: maybe not needed just use BaseButton?
 const Button = styled(BaseButton, {});
 
 export default JoinGame;

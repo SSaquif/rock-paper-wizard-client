@@ -5,7 +5,7 @@ import BaseButton from "../components/Button";
 function NewGame() {
   return (
     <Container>
-      <Form>
+      <StyledForm>
         <AvatarContainer>
           {/* todo: replace with proper selectable avatar component */}
           <div
@@ -17,19 +17,20 @@ function NewGame() {
             }}
           ></div>
         </AvatarContainer>
-        <UserNameContainer>
-          <label htmlFor="username">Username</label>
-          <input type="text" id="username" />
-        </UserNameContainer>
-        <NumOfPlayersContainer>
-          <label htmlFor="numOfPlayers">Number of Players</label>
-          <input type="number" id="numOfPlayers" min={2} max={6} />
-        </NumOfPlayersContainer>
+        <FormDataRowContainer>
+          <FormLabel htmlFor="username">Username</FormLabel>
+          <FormInput type="text" id="username" />
+        </FormDataRowContainer>
+        <FormDataRowContainer>
+          <FormLabel htmlFor="numOfPlayers">Players</FormLabel>
+          {/* Write validation yourself */}
+          <FormInput type="text" id="numOfPlayers" />
+        </FormDataRowContainer>
         <ButtonContainer>
           <Button>Cancel</Button>
-          <Button type="submit">Create Game</Button>
+          <Button type="submit">Create</Button>
         </ButtonContainer>
-      </Form>
+      </StyledForm>
     </Container>
   );
 }
@@ -39,6 +40,13 @@ const Container = styled("div", {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  color: "var(--gray-900)",
+});
+
+const StyledForm = styled(Form, {
+  display: "flex",
+  flexDirection: "column",
+  gap: "1rem",
 });
 
 const AvatarContainer = styled("div", {
@@ -48,26 +56,30 @@ const AvatarContainer = styled("div", {
   justifyContent: "center",
 });
 
-const UserNameContainer = styled("div", {
+const FormDataRowContainer = styled("div", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  border: "solid",
+  gap: "1rem",
+  minWidth: "fit-content",
+  // border: "solid",
   "@tabletAndUp": {
     flexDirection: "row",
   },
 });
 
-const NumOfPlayersContainer = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  border: "solid",
-  "@tabletAndUp": {
-    flexDirection: "row",
-  },
+const FormLabel = styled("label", {
+  flexBasis: "30%",
+  fontSize: "1.5rem",
+  fontWeight: "900",
+  // minWidth: "max-content",
+});
+
+const FormInput = styled("input", {
+  flexBasis: "50%",
+  fontSize: "1.5rem",
+  fontWeight: "900",
 });
 
 const ButtonContainer = styled("div", {
@@ -75,6 +87,7 @@ const ButtonContainer = styled("div", {
   justifyContent: "center",
 });
 
+// todo: maybe not needed just use BaseButton?
 const Button = styled(BaseButton, {});
 
 export default NewGame;
