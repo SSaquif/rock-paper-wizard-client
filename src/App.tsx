@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import globalStyles from "./GlobalStyles";
+// import globalStyles from "./GlobalStyles";
 import { styled } from "./stitches-theme";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 function App() {
-  globalStyles();
+  // globalStyles();
 
   // testing
   // useEffect(() => {

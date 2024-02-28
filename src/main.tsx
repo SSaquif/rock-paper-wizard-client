@@ -8,11 +8,13 @@ import NewGame from "./routes/NewGame.tsx";
 import JoinGame from "./routes/JoinGame.tsx";
 import GameLobby from "./routes/game/GameLobby.tsx";
 import GameRoom from "./routes/game/GameRoom.tsx";
+import Notfound from "./routes/NotFound.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <Notfound />,
     children: [
       {
         path: "home",

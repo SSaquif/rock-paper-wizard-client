@@ -1,11 +1,19 @@
 import { styled } from "../stitches-theme";
 import BaseButton from "../components/Button";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
+  function handleNewGame() {
+    navigate("/new-game");
+  }
+  function handleJoinGame() {
+    navigate("/join-game");
+  }
   return (
     <Container>
-      <Button>New Game</Button>
-      <Button>Join Game</Button>
+      <Button onClick={handleNewGame}>New Game</Button>
+      <Button onClick={handleJoinGame}>Join Game</Button>
     </Container>
   );
 }

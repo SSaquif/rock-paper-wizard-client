@@ -1,8 +1,14 @@
-import { Form } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import { styled } from "../stitches-theme";
 import BaseButton from "../components/Button";
 
 function JoinGame() {
+  const navigate = useNavigate();
+
+  function handleCancel() {
+    navigate("/home");
+  }
+
   return (
     <Container>
       <StyledForm>
@@ -26,7 +32,7 @@ function JoinGame() {
           <FormInput type="text" id="username" />
         </FormDataRowContainer>
         <ButtonContainer>
-          <Button>Cancel</Button>
+          <Button onClick={handleCancel}>Cancel</Button>
           <Button type="submit">Join</Button>
         </ButtonContainer>
       </StyledForm>
