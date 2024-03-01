@@ -3,6 +3,7 @@ import * as Toast from "@radix-ui/react-toast";
 import { styled } from "../stitches-theme";
 import BaseButton from "../components/Button";
 import { useState } from "react";
+import PLayerSelect from "../components/PlayerSelect";
 
 type NewGameEntry = {
   username: string;
@@ -97,7 +98,7 @@ function NewGame() {
           <FormDataRowContainer>
             <FormLabel htmlFor="numOfPlayers">Players</FormLabel>
             {/* Write validation yourself */}
-            <FormInput
+            {/* <FormInput
               type="text"
               id="numOfPlayers"
               value={newGameEntry.numOfPlayers}
@@ -107,7 +108,8 @@ function NewGame() {
                   numOfPlayers: parseInt(ev.target.value),
                 }));
               }}
-            />
+            /> */}
+            <PLayerSelect />
           </FormDataRowContainer>
           <ButtonContainer>
             <Button onClick={handleCancel}>Cancel</Button>
