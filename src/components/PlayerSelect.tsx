@@ -39,4 +39,8 @@ function PLayerSelect() {
   );
 }
 
+function SelectItem() {
+  return <SelectPrimitive.SelectItem value="1">1</SelectPrimitive.SelectItem>;
+}
+
 export default PLayerSelect;

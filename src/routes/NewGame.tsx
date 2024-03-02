@@ -1,4 +1,9 @@
-import { Form, useNavigate } from "react-router-dom";
+import {
+  Form,
+  useNavigate,
+  ActionFunction,
+  useActionData,
+} from "react-router-dom";
 import * as Toast from "@radix-ui/react-toast";
 import { styled } from "../stitches-theme";
 import BaseButton from "../components/Button";
@@ -8,6 +13,7 @@ import PLayerSelect from "../components/PlayerSelect";
 type NewGameEntry = {
   username: string;
   numOfPlayers: number;
+  password: string;
 };
 
 type EntryError = {
@@ -15,51 +21,73 @@ type EntryError = {
   message: string | null;
 };
 
-function NewGame() {
-  const navigate = useNavigate();
-  const [newGameEntry, setNewGameEntry] = useState<NewGameEntry>({
-    username: "",
-    numOfPlayers: 2,
-  });
-  const [error, setError] = useState<EntryError>({
+export const newGameAction: ActionFunction = async ({ request }) => {
+  const formData = await request.formData();
+  const submission = {
+    username: formData.get("username") as string,
+    numOfPlayers: Number(formData.get("numOfPlayers")),
+    password: formData.get("password") as string,
+    botcatcher: formData.get("botcatcher") as string,
+  };
+  const { username, numOfPlayers } = submission;
+  let error: EntryError = {
     isError: false,
     message: null,
-  });
+  };
 
-  function validateUserData() {
-    // todo add regex validation for username, to only contain letters and numbers
-
-    if (
-      newGameEntry?.username.length < 3 ||
-      newGameEntry?.username.length > 20
-    ) {
-      setError({
-        isError: true,
-        message: "Username must be between 3-20 characters",
-      });
-      return false;
-    }
-    if (newGameEntry?.username.match(/[^a-zA-Z0-9]/)) {
-      setError({
-        isError: true,
-        message: "Username must contain only letters and numbers",
-      });
-      return false;
-    }
-    if (newGameEntry?.numOfPlayers < 2 || newGameEntry?.numOfPlayers > 6) {
-      setError({
-        isError: true,
-        message: "Number of players must be between 2-6",
-      });
-      return false;
-    }
+  if (submission.botcatcher) {
+    return {
+      isError: true,
+      message: "OOps! Something went wrong",
+    };
   }
 
-  function handleCreateGame() {
-    console.log("newGameEntry", newGameEntry);
-    if (!validateUserData()) {
-      return;
-    }
+  // Todo: currently commented out because
+  // using default HTML Form validation https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation
+  // but might put them back to provide better custom error toast messages
+  // built in validation might be not good enough for mobile
+  if (username.length < 3 || username.length > 20) {
+    error = {
+      isError: true,
+      message: "Username must be between 3-20 characters",
+    };
+  } else if (username.match(/[^a-zA-Z0-9]/)) {
+    error = {
+      isError: true,
+      message: "Username must contain only letters and numbers",
+    };
+  }
+  // if numberofPLayers is NaN
+  else if (!Number(numOfPlayers)) {
+    error = {
+      isError: true,
+      message: "Number of players must be a number",
+    };
+  } else if (numOfPlayers < 2 || numOfPlayers > 6) {
+    error = {
+      isError: true,
+      message: "Number of players must be between 2-6",
+    };
+  }
+
+  if (error.isError) {
+    return error;
+  }
+  console.log("submission", submission);
+  // const {gameId} = await createNewGame(submission);
+  // return redirect("/game/:game-id/lobby");
+  return {};
+};
+
+function NewGame() {
+  const navigate = useNavigate();
+  let error = useActionData() as undefined | EntryError;
+  console.log("error", error);
+  if (!error) {
+    error = {
+      isError: false,
+      message: null,
+    };
   }
 
   function handleCancel() {
@@ -69,7 +97,7 @@ function NewGame() {
   return (
     <Container>
       <Toast.Provider swipeDirection="right">
-        <StyledForm onSubmit={handleCreateGame}>
+        <StyledForm method="POST" action="">
           <AvatarContainer>
             {/* todo: replace with proper selectable avatar component */}
             <div
@@ -81,35 +109,40 @@ function NewGame() {
               }}
             ></div>
           </AvatarContainer>
-          <FormDataRowContainer>
+          <FormDataRowContainer type={"real"}>
             <FormLabel htmlFor="username">Username</FormLabel>
             <FormInput
-              type="text"
+              required
+              type="string"
               id="username"
-              value={newGameEntry.username}
-              onChange={(ev) => {
-                setNewGameEntry((prev) => ({
-                  ...prev,
-                  username: ev.target.value,
-                }));
-              }}
+              name="username"
+              // commented out because using cutome error msg with toast
+              // minLength={3}
+              // maxLength={20}
+              // pattern="[a-zA-Z0-9]+" // only letters and numbers
             />
           </FormDataRowContainer>
-          <FormDataRowContainer>
+          <FormDataRowContainer type={"real"}>
             <FormLabel htmlFor="numOfPlayers">Players</FormLabel>
             {/* Write validation yourself */}
-            {/* <FormInput
-              type="text"
+            <FormInput
+              required
+              type="number"
               id="numOfPlayers"
-              value={newGameEntry.numOfPlayers}
-              onChange={(ev) => {
-                setNewGameEntry((prev) => ({
-                  ...prev,
-                  numOfPlayers: parseInt(ev.target.value),
-                }));
-              }}
-            /> */}
-            <PLayerSelect />
+              name="numOfPlayers"
+              // commented out causes srews up css in chrome
+              // min={2}
+              // max={6}
+            />
+            {/* <PLayerSelect /> */}
+          </FormDataRowContainer>
+          <FormDataRowContainer type={"real"}>
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <FormInput required type="text" id="paswword" name="paswword" />
+          </FormDataRowContainer>
+          <FormDataRowContainer type={"fake"}>
+            <FormLabel htmlFor="botcatcher">Bot Honeypot</FormLabel>
+            <FormInput required type="text" id="botcatcher" name="botcatcher" />
           </FormDataRowContainer>
           <ButtonContainer>
             <Button onClick={handleCancel}>Cancel</Button>
@@ -117,18 +150,9 @@ function NewGame() {
           </ButtonContainer>
         </StyledForm>
         {/* // Make a separate reusable toast component */}
-        <Toast.Root open={error.isError}>
-          <Toast.Title>{error.message}</Toast.Title>
-          <Toast.Close
-            onClick={() => {
-              setError({
-                isError: false,
-                message: null,
-              });
-            }}
-          >
-            Close
-          </Toast.Close>
+        <Toast.Root open={error?.isError}>
+          <Toast.Title>{error?.message}</Toast.Title>
+          <Toast.Close onClick={() => {}}>Close</Toast.Close>
         </Toast.Root>
         <ToastViewport />
       </Toast.Provider>
@@ -158,15 +182,30 @@ const AvatarContainer = styled("div", {
 });
 
 const FormDataRowContainer = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "1rem",
-  minWidth: "fit-content",
-  // border: "solid",
-  "@tabletAndUp": {
-    flexDirection: "row",
+  variants: {
+    type: {
+      real: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "1rem",
+        minWidth: "fit-content",
+        // border: "solid",
+        "@tabletAndUp": {
+          flexDirection: "row",
+        },
+      },
+      fake: {
+        opacity: 0,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        height: 0,
+        width: 0,
+        zIndex: -1,
+      },
+    },
   },
 });
 
