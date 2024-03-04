@@ -20,6 +20,7 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // think there is a better way to do this
   useEffect(() => {
     // console.log("location", location);
     if (location.pathname === "/") {

@@ -14,6 +14,7 @@ type NewGameEntry = {
   username: string;
   numOfPlayers: number;
   password: string;
+  confirmPassword: string;
 };
 
 type EntryError = {
@@ -75,6 +76,7 @@ export const newGameAction: ActionFunction = async ({ request }) => {
   }
   console.log("submission", submission);
   // const {gameId} = await createNewGame(submission);
+
   // return redirect("/game/:game-id/lobby");
   return {};
 };
