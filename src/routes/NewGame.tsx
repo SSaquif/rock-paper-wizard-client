@@ -3,12 +3,15 @@ import {
   useNavigate,
   ActionFunction,
   useActionData,
+  redirect,
 } from "react-router-dom";
 import * as Toast from "@radix-ui/react-toast";
 import { styled } from "../stitches-theme";
 import BaseButton from "../components/Button";
 import { useState } from "react";
 import PLayerSelect from "../components/PlayerSelect";
+import { createNewGame } from "../api/new-game";
+import { queryClient } from "../main";
 
 type NewGameEntry = {
   username: string;
@@ -28,6 +31,7 @@ export const newGameAction: ActionFunction = async ({ request }) => {
     username: formData.get("username") as string,
     numOfPlayers: Number(formData.get("numOfPlayers")),
     password: formData.get("password") as string,
+    confirmPassword: formData.get("confirmPassword") as string,
     botcatcher: formData.get("botcatcher") as string,
   };
   const { username, numOfPlayers } = submission;
@@ -70,15 +74,43 @@ export const newGameAction: ActionFunction = async ({ request }) => {
       message: "Number of players must be between 2-6",
     };
   }
+  // password must be at least 8 characters
+  else if (submission.password.length < 8) {
+    error = {
+      isError: true,
+      message: "Password must be at least 8 characters",
+    };
+  } else if (submission.password !== submission.confirmPassword) {
+    error = {
+      isError: true,
+      message: "Passwords do not match",
+    };
+  }
 
   if (error.isError) {
     return error;
   }
   console.log("submission", submission);
-  // const {gameId} = await createNewGame(submission);
+  const newGameEntry: NewGameEntry = {
+    username: submission.username,
+    numOfPlayers: submission.numOfPlayers,
+    password: submission.password,
+    confirmPassword: submission.confirmPassword,
+  };
 
-  // return redirect("/game/:game-id/lobby");
-  return {};
+  const data = await createNewGame(newGameEntry);
+  // invalidate cache
+  // await queryClient.invalidateQueries(["games"]);
+  //todo: use better error handling using values from above hook
+  if (!data) {
+    return {
+      isError: true,
+      message: "Something went wrong",
+    };
+  }
+  //
+  const { gameID } = data;
+  return redirect(`/game/${gameID}/lobby`);
 };
 
 function NewGame() {
@@ -140,11 +172,20 @@ function NewGame() {
           </FormDataRowContainer>
           <FormDataRowContainer type={"real"}>
             <FormLabel htmlFor="password">Password</FormLabel>
-            <FormInput required type="text" id="paswword" name="paswword" />
+            <FormInput required type="text" id="password" name="password" />
           </FormDataRowContainer>
           <FormDataRowContainer type={"fake"}>
             <FormLabel htmlFor="botcatcher">Bot Honeypot</FormLabel>
-            <FormInput required type="text" id="botcatcher" name="botcatcher" />
+            <FormInput type="text" id="botcatcher" name="botcatcher" />
+          </FormDataRowContainer>
+          <FormDataRowContainer type={"real"}>
+            <FormLabel htmlFor="confirmPassword">Password</FormLabel>
+            <FormInput
+              required
+              type="text"
+              id="confirmPassword"
+              name="confirmPassword"
+            />
           </FormDataRowContainer>
           <ButtonContainer>
             <Button onClick={handleCancel}>Cancel</Button>

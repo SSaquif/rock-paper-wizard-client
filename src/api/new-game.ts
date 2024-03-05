@@ -1,4 +1,4 @@
-// import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 export type NewGameEntry = {
   username: string;
@@ -7,21 +7,29 @@ export type NewGameEntry = {
   confirmPassword: string;
 };
 
-export async function createNewGame(submission: NewGameEntry): Promise<any> {
+export type Game = {
+  gameID: string;
+};
+
+export async function createNewGame(newGameEntry: NewGameEntry): Promise<Game> {
   const res = await fetch("/api/new-game", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(submission),
+    body: JSON.stringify(newGameEntry),
   });
-  return res.json();
+
+  const data = await res.json();
+  return data;
 }
 
 // todo: fix type error later and use react-query
-// export default function useCreateNewGame() {
-//   return useQuery({
-//     queryKey: ["createNewGame", ],
-//     queryFn: ()=> createNewGame(),
+// probably don't need cache for this with mutationKey
+// Apparently don't need to use react-query for this
+// since action take care of this
+// export default function useCreateNewGame(newGameEntry: NewGameEntry) {
+//   return useMutation({
+//     mutationFn: createNewGame,
 //   });
 // }
