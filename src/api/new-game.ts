@@ -1,18 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
-
-export type NewGameEntry = {
-  username: string;
-  numOfPlayers: number;
-  password: string;
-  confirmPassword: string;
-};
+import {
+  newGameEntrySchema,
+  NewGameEntry,
+} from "@ssaquif/rock-paper-wizard-api-types-and-schema";
 
 export type Game = {
   gameID: string;
 };
 
 export async function createNewGame(newGameEntry: NewGameEntry): Promise<Game> {
-  const res = await fetch("/api/new-game", {
+  const res = await fetch("/api/games/new-game", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
