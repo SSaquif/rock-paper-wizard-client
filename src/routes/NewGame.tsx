@@ -8,17 +8,14 @@ import {
 import * as Toast from "@radix-ui/react-toast";
 import { styled } from "../stitches-theme";
 import BaseButton from "../components/Button";
-import { useState } from "react";
-import PLayerSelect from "../components/PlayerSelect";
+// import { useState } from "react";
+// import PLayerSelect from "../components/PlayerSelect";
 import { createNewGame } from "../api/new-game";
-import { queryClient } from "../main";
-
-type NewGameEntry = {
-  username: string;
-  numOfPlayers: number;
-  password: string;
-  confirmPassword: string;
-};
+// import { queryClient } from "../main";
+import {
+  NewGameEntry,
+  NewGameEntrySchema,
+} from "@ssaquif/rock-paper-wizard-api-types-and-schema";
 
 type EntryError = {
   isError: boolean;
@@ -34,74 +31,34 @@ export const newGameAction: ActionFunction = async ({ request }) => {
     confirmPassword: formData.get("confirmPassword") as string,
     botcatcher: formData.get("botcatcher") as string,
   };
-  const { username, numOfPlayers } = submission;
-  let error: EntryError = {
-    isError: false,
-    message: null,
-  };
 
+  // field validations
   if (submission.botcatcher) {
     return {
       isError: true,
       message: "OOps! Something went wrong",
     };
   }
-
-  // Todo: currently commented out because
-  // using default HTML Form validation https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation
-  // but might put them back to provide better custom error toast messages
-  // built in validation might be not good enough for mobile
-  if (username.length < 3 || username.length > 20) {
-    error = {
+  const validatedData = NewGameEntrySchema.safeParse(submission);
+  if (!validatedData.success) {
+    return {
       isError: true,
-      message: "Username must be between 3-20 characters",
-    };
-  } else if (username.match(/[^a-zA-Z0-9]/)) {
-    error = {
-      isError: true,
-      message: "Username must contain only letters and numbers",
-    };
-  }
-  // if numberofPLayers is NaN
-  else if (!Number(numOfPlayers)) {
-    error = {
-      isError: true,
-      message: "Number of players must be a number",
-    };
-  } else if (numOfPlayers < 2 || numOfPlayers > 6) {
-    error = {
-      isError: true,
-      message: "Number of players must be between 2-6",
-    };
-  }
-  // password must be at least 8 characters
-  else if (submission.password.length < 8) {
-    error = {
-      isError: true,
-      message: "Password must be at least 8 characters",
-    };
-  } else if (submission.password !== submission.confirmPassword) {
-    error = {
-      isError: true,
-      message: "Passwords do not match",
+      message: validatedData.error.issues[0].message,
     };
   }
 
-  if (error.isError) {
-    return error;
-  }
-  console.log("submission", submission);
+  // submit data
   const newGameEntry: NewGameEntry = {
-    username: submission.username,
-    numOfPlayers: submission.numOfPlayers,
-    password: submission.password,
-    confirmPassword: submission.confirmPassword,
+    username: validatedData.data.username,
+    numOfPlayers: validatedData.data.numOfPlayers,
+    password: validatedData.data.password,
+    confirmPassword: validatedData.data.confirmPassword,
   };
-
   const data = await createNewGame(newGameEntry);
-  // invalidate cache
+
+  // todo: invalidate cache
   // await queryClient.invalidateQueries(["games"]);
-  //todo: use better error handling using values from above hook
+  // todo: use better error handling using values from above hook
   if (!data) {
     return {
       isError: true,
@@ -110,7 +67,7 @@ export const newGameAction: ActionFunction = async ({ request }) => {
   }
   //
   const { gameID } = data;
-  return redirect(`/game/${gameID}/lobby`);
+  // return redirect(`/game/${gameID}/lobby`);
 };
 
 function NewGame() {
