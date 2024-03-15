@@ -13,8 +13,8 @@ import BaseButton from "../components/Button";
 import { createNewGame } from "../api/new-game";
 // import { queryClient } from "../main";
 import {
-  NewGameEntry,
-  NewGameEntrySchema,
+  NewGameForm,
+  NewGameFormSchema,
 } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
 
 type EntryError = {
@@ -39,7 +39,7 @@ export const newGameAction: ActionFunction = async ({ request }) => {
       message: "OOps! Something went wrong",
     };
   }
-  const validatedData = NewGameEntrySchema.safeParse(submission);
+  const validatedData = NewGameFormSchema.safeParse(submission);
   if (!validatedData.success) {
     return {
       isError: true,
@@ -48,11 +48,12 @@ export const newGameAction: ActionFunction = async ({ request }) => {
   }
 
   // submit data
-  const newGameEntry: NewGameEntry = {
+  const newGameEntry: NewGameForm = {
     username: validatedData.data.username,
     numOfPlayers: validatedData.data.numOfPlayers,
     password: validatedData.data.password,
     confirmPassword: validatedData.data.confirmPassword,
+    selectedColor: "red", // todo: replace with actual color selection
   };
   const data = await createNewGame(newGameEntry);
 
