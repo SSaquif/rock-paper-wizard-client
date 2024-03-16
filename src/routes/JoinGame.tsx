@@ -1,9 +1,71 @@
-import { Form, useNavigate } from "react-router-dom";
+import {
+  ActionFunction,
+  Form,
+  useActionData,
+  useNavigate,
+} from "react-router-dom";
 import { styled } from "../stitches-theme";
 import BaseButton from "../components/Button";
+import {
+  JoinGameForm,
+  JoinGameFormSchema,
+} from "@ssaquif/rock-paper-wizard-api-types-and-schema";
+import { joinGame } from "../api/join-game";
+import { EntryError } from "../types/errors";
+
+export const joinGameAction: ActionFunction = async ({ request }) => {
+  const formData = await request.formData();
+  const submission = {
+    gameId: formData.get("gameId") as string,
+    username: formData.get("username") as string,
+    password: formData.get("password") as string,
+    selectedColor: formData.get("selectedColor") as string,
+  };
+
+  // field validations
+  // if (submission.botcatcher) {
+  //   return {
+  //     isError: true,
+  //     message: "OOps! Something went wrong",
+  //   };
+  // }
+  const validatedData = JoinGameFormSchema.safeParse(submission);
+  if (!validatedData.success) {
+    return {
+      isError: true,
+      message: validatedData.error.issues[0].message,
+    };
+  }
+
+  // submit data
+  const joinGameEntry: JoinGameForm = {
+    gameId: validatedData.data.gameId,
+    username: validatedData.data.username,
+    password: validatedData.data.password,
+    selectedColor: validatedData.data.selectedColor,
+  };
+
+  const data = await joinGame(joinGameEntry);
+  // todo: invalidate cache
+  // await queryClient.invalidateQueries(["games"]);
+  // todo: use better error handling using values from above hook
+  if (!data) {
+    return {
+      isError: true,
+      message: "Something went wrong",
+    };
+  }
+  //
+  const { game_id } = data;
+  // return redirect(`/game/${gameID}/lobby`);
+};
 
 function JoinGame() {
   const navigate = useNavigate();
+  let error = useActionData() as undefined | EntryError;
+  if (!error) {
+    error = { isError: false, message: null };
+  }
 
   function handleCancel() {
     navigate("/home");
@@ -11,7 +73,7 @@ function JoinGame() {
 
   return (
     <Container>
-      <StyledForm>
+      <StyledForm method="PATCH" action="">
         <AvatarContainer>
           {/* todo: replace with proper selectable avatar component */}
           <div
@@ -25,12 +87,26 @@ function JoinGame() {
         </AvatarContainer>
         <FormDataRowContainer>
           <FormLabel htmlFor="gameID">Game ID</FormLabel>
-          <FormInput type="text" id="gameID" />
+          <FormInput required type="text" id="gameID" name="gameId" />
         </FormDataRowContainer>
         <FormDataRowContainer>
           <FormLabel htmlFor="username">Username</FormLabel>
-          <FormInput type="text" id="username" />
+          <FormInput required type="text" id="username" name="username" />
         </FormDataRowContainer>
+        <FormDataRowContainer>
+          <FormLabel htmlFor="password">Password</FormLabel>
+          <FormInput required type="password" id="password" name="password" />
+        </FormDataRowContainer>
+        <FormDataRowContainer>
+          <FormLabel htmlFor="selectedColor">Color</FormLabel>
+          <FormInput
+            required
+            type="text"
+            id="selectedColor"
+            name="selectedColor"
+          />
+        </FormDataRowContainer>
+        {/* todo: add a bot catcher */}
         <ButtonContainer>
           <Button onClick={handleCancel}>Cancel</Button>
           <Button type="submit">Join</Button>

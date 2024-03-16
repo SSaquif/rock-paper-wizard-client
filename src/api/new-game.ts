@@ -1,20 +1,17 @@
-import { useMutation } from "@tanstack/react-query";
+// apparently don't need with remix anymore
+// import { useMutation } from "@tanstack/react-query";
 import {
-  newGameEntrySchema,
-  NewGameEntry,
+  NewGameForm,
+  Game,
 } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
 
-export type Game = {
-  gameID: string;
-};
-
-export async function createNewGame(newGameEntry: NewGameEntry): Promise<Game> {
+export async function createNewGame(newGameForm: NewGameForm): Promise<Game> {
   const res = await fetch("/api/games/new-game", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(newGameEntry),
+    body: JSON.stringify(newGameForm),
   });
 
   const data = await res.json();

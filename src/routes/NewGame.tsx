@@ -16,11 +16,7 @@ import {
   NewGameForm,
   NewGameFormSchema,
 } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
-
-type EntryError = {
-  isError: boolean;
-  message: string | null;
-};
+import { EntryError } from "../types/errors";
 
 export const newGameAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -30,6 +26,7 @@ export const newGameAction: ActionFunction = async ({ request }) => {
     password: formData.get("password") as string,
     confirmPassword: formData.get("confirmPassword") as string,
     botcatcher: formData.get("botcatcher") as string,
+    selectedColor: formData.get("selectedColor") as string,
   };
 
   // field validations
@@ -53,7 +50,7 @@ export const newGameAction: ActionFunction = async ({ request }) => {
     numOfPlayers: validatedData.data.numOfPlayers,
     password: validatedData.data.password,
     confirmPassword: validatedData.data.confirmPassword,
-    selectedColor: "red", // todo: replace with actual color selection
+    selectedColor: validatedData.data.selectedColor,
   };
   const data = await createNewGame(newGameEntry);
 
@@ -67,8 +64,8 @@ export const newGameAction: ActionFunction = async ({ request }) => {
     };
   }
   //
-  const { gameID } = data;
-  // return redirect(`/game/${gameID}/lobby`);
+  const { game_id } = data;
+  // return redirect(`/game/${game_id}/lobby`);
 };
 
 function NewGame() {
@@ -76,10 +73,7 @@ function NewGame() {
   let error = useActionData() as undefined | EntryError;
   console.log("error", error);
   if (!error) {
-    error = {
-      isError: false,
-      message: null,
-    };
+    error = { isError: false, message: null };
   }
 
   function handleCancel() {
@@ -132,10 +126,6 @@ function NewGame() {
             <FormLabel htmlFor="password">Password</FormLabel>
             <FormInput required type="text" id="password" name="password" />
           </FormDataRowContainer>
-          <FormDataRowContainer type={"fake"}>
-            <FormLabel htmlFor="botcatcher">Bot Honeypot</FormLabel>
-            <FormInput type="text" id="botcatcher" name="botcatcher" />
-          </FormDataRowContainer>
           <FormDataRowContainer type={"real"}>
             <FormLabel htmlFor="confirmPassword">Password</FormLabel>
             <FormInput
@@ -144,6 +134,19 @@ function NewGame() {
               id="confirmPassword"
               name="confirmPassword"
             />
+          </FormDataRowContainer>
+          <FormDataRowContainer type={"real"}>
+            <FormLabel htmlFor="selectedColor">Color</FormLabel>
+            <FormInput
+              required
+              type="text"
+              id="selectedColor"
+              name="selectedColor"
+            />
+          </FormDataRowContainer>
+          <FormDataRowContainer type={"fake"}>
+            <FormLabel htmlFor="botcatcher">Bot Honeypot</FormLabel>
+            <FormInput type="text" id="botcatcher" name="botcatcher" />
           </FormDataRowContainer>
           <ButtonContainer>
             <Button onClick={handleCancel}>Cancel</Button>

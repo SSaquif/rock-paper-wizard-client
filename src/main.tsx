@@ -5,7 +5,7 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./routes/Home.tsx";
 import NewGame, { newGameAction } from "./routes/NewGame.tsx";
-import JoinGame from "./routes/JoinGame.tsx";
+import JoinGame, { joinGameAction } from "./routes/JoinGame.tsx";
 import GameLobby from "./routes/game/GameLobby.tsx";
 import GameRoom from "./routes/game/GameRoom.tsx";
 import Notfound from "./routes/NotFound.tsx";
@@ -31,6 +31,7 @@ const router = createBrowserRouter([
       {
         path: "join-game",
         element: <JoinGame />,
+        action: joinGameAction,
       },
       {
         path: "game/:game-id/lobby",
