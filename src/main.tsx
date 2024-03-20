@@ -34,11 +34,11 @@ const router = createBrowserRouter([
         action: joinGameAction,
       },
       {
-        path: "game/:game-id/lobby",
+        path: "game/:game_id/lobby",
         element: <GameLobby />,
       },
       {
-        path: "game/:game-id/play",
+        path: "game/:game_id/play",
         element: <GameRoom />,
       },
     ],

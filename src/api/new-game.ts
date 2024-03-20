@@ -15,6 +15,7 @@ export async function createNewGame(newGameForm: NewGameForm): Promise<Game> {
   });
 
   const data = await res.json();
+  console.log(data);
   return data;
 }
 

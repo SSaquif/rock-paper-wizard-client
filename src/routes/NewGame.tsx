@@ -65,7 +65,7 @@ export const newGameAction: ActionFunction = async ({ request }) => {
   }
   //
   const { game_id } = data;
-  // return redirect(`/game/${game_id}/lobby`);
+  return redirect(`/game/${game_id}/lobby`);
 };
 
 function NewGame() {

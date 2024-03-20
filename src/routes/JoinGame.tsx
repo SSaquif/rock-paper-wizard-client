@@ -1,6 +1,7 @@
 import {
   ActionFunction,
   Form,
+  redirect,
   useActionData,
   useNavigate,
 } from "react-router-dom";
@@ -55,9 +56,9 @@ export const joinGameAction: ActionFunction = async ({ request }) => {
       message: "Something went wrong",
     };
   }
-  //
+  //fix: This seems to be undefined
   const { game_id } = data;
-  // return redirect(`/game/${gameID}/lobby`);
+  return redirect(`/game/${game_id}/lobby`);
 };
 
 function JoinGame() {
