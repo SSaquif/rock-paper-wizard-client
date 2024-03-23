@@ -7,6 +7,7 @@ import { io } from "socket.io-client";
 //     ? "https://rock-paper-wizard.herokuapp.com"
 //     : "http://localhost:8080";
 
-const URL = "http://localhost:8080";
+const GAMES_URL = "http://localhost:8080/games";
+// const ADMIN_URL = "http://localhost:8080/admin";
 
-export const socket = io(URL, { autoConnect: false });
+export const gameSocket = io(GAMES_URL, { autoConnect: false });

@@ -13,6 +13,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient();
 
+// Alternate way: https://reactrouter.com/en/main/utils/create-routes-from-elements
+// ^ Above might be more helpful for using context
+// A possible way to use context: https://codesandbox.io/p/sandbox/react-context-with-react-router-v6-m72xf?file=%2Fsrc%2Findex.js%3A9%2C12
 const router = createBrowserRouter([
   {
     path: "/",
@@ -33,6 +36,8 @@ const router = createBrowserRouter([
         element: <JoinGame />,
         action: joinGameAction,
       },
+      // Might be a good idea to nest the 2 routes below
+      // That way will be easier to wrap with contexts
       {
         path: "game/:game_id/lobby",
         element: <GameLobby />,
