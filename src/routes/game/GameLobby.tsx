@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { gameSocket } from "../../adapters/socket";
 import { useParams } from "react-router-dom";
+import { styled } from "@stitches/react";
+import { useQuery } from "@tanstack/react-query";
 
 // TODO: make separate components for socket connection and disconnection as per socket io docs
 // TODO: types for everything
@@ -10,13 +12,17 @@ function GameLobby() {
 
   useEffect(() => {
     async function joinLobbyAck() {
-      const serverResponse: any = await gameSocket.emit("join-game", {
-        game_id,
-        username: "test",
-      });
+      // should store this response in some global state
+      // also find the correct typing for this
+      // this typing returns any
+      const serverResponse: Awaited<ReturnType<typeof gameSocket.emitWithAck>> =
+        // const serverResponse: any =
+        await gameSocket.emit("join-game", {
+          game_id,
+          username: "test",
+        });
       console.log("serverResponse", serverResponse);
-      if (serverResponse.error) {
-        console.log(serverResponse.msg);
+      if (!serverResponse.connected) {
         setIsConnected(false);
         return;
       }
@@ -45,11 +51,19 @@ function GameLobby() {
   }, []);
 
   return (
-    <div>
+    <Container>
       <h1>Game Lobby</h1>
       <p>${isConnected ? "Connected " : "Disconnected"}</p>
-    </div>
+    </Container>
   );
 }
+
+const Container = styled("div", {
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  color: "white", // put this in theme
+});
 
 export default GameLobby;

@@ -5,8 +5,10 @@ import {
   Game,
 } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
 
-export async function createNewGame(newGameForm: NewGameForm): Promise<Game> {
-  const res = await fetch("/api/games/new-game", {
+export async function createNewRPWGame(
+  newGameForm: NewGameForm
+): Promise<Game> {
+  const res = await fetch("/api/rpw_games/new-game", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

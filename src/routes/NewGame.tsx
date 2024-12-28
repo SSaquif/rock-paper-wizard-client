@@ -10,7 +10,7 @@ import { styled } from "../stitches-theme";
 import BaseButton from "../components/Button";
 // import { useState } from "react";
 // import PLayerSelect from "../components/PlayerSelect";
-import { createNewGame } from "../api/new-game";
+import { createNewRPWGame } from "../api/new-game";
 // import { queryClient } from "../main";
 import {
   NewGameForm,
@@ -52,7 +52,7 @@ export const newGameAction: ActionFunction = async ({ request }) => {
     confirmPassword: validatedData.data.confirmPassword,
     selectedColor: validatedData.data.selectedColor,
   };
-  const data = await createNewGame(newGameEntry);
+  const data = await createNewRPWGame(newGameEntry);
 
   // todo: invalidate cache
   // await queryClient.invalidateQueries(["games"]);

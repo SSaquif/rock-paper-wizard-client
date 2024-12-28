@@ -11,7 +11,7 @@ import {
   JoinGameForm,
   JoinGameFormSchema,
 } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
-import { joinGame } from "../api/join-game";
+import { joinRPWGame } from "../api/join-game";
 import { EntryError } from "../types/errors";
 
 export const joinGameAction: ActionFunction = async ({ request }) => {
@@ -46,7 +46,7 @@ export const joinGameAction: ActionFunction = async ({ request }) => {
     selectedColor: validatedData.data.selectedColor,
   };
 
-  const data = await joinGame(joinGameEntry);
+  const data = await joinRPWGame(joinGameEntry);
   // todo: invalidate cache
   // await queryClient.invalidateQueries(["games"]);
   // todo: use better error handling using values from above hook
