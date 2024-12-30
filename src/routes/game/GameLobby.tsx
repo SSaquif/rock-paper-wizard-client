@@ -3,12 +3,39 @@ import { gameSocket } from "../../adapters/socket";
 import { useParams } from "react-router-dom";
 import { styled } from "@stitches/react";
 import { useQuery } from "@tanstack/react-query";
+import { getRPWGameByID } from "../../api/get-rpw-game";
 
 // TODO: make separate components for socket connection and disconnection as per socket io docs
 // TODO: types for everything
 function GameLobby() {
   const [isConnected, setIsConnected] = useState(gameSocket.connected);
   const { game_id } = useParams();
+  const [players, setPlayers] = useState<(string | null)[]>([]);
+
+  if (!game_id) {
+    return <p>Game ID not</p>;
+  }
+
+  const { data, error, isLoading, isError } = useQuery({
+    queryKey: ["rpwGameFromID", game_id],
+    queryFn: () => getRPWGameByID(game_id),
+  });
+
+  console.log("data", data);
+
+  //
+  useEffect(() => {
+    if (data) {
+      const players = new Array();
+      for (let i = 0; i < data.number_of_players; i++) {
+        const playerKey = `player_${i + 1}` as keyof typeof data;
+        if (data[playerKey]) {
+          players[i] = data[playerKey];
+        }
+      }
+      setPlayers(players);
+    }
+  }, [data]);
 
   useEffect(() => {
     async function joinLobbyAck() {
@@ -52,8 +79,26 @@ function GameLobby() {
 
   return (
     <Container>
-      <h1>Game Lobby</h1>
-      <p>${isConnected ? "Connected " : "Disconnected"}</p>
+      <HeaderContainer>
+        <h1>Lobby</h1>
+        <h2> Rock Paper Wizard</h2>
+        <p>${isConnected ? "Connected " : "Disconnected"}</p>
+      </HeaderContainer>
+      <PlayerContainer>
+        {players.map((p, i) => {
+          return (
+            <PlayerDetails key={`player-${i + 1}`}>
+              <Avatar />
+              <p>{p}</p>
+            </PlayerDetails>
+          );
+        })}
+      </PlayerContainer>
+      <DetailsContainer>
+        <p>Number of Players: {data?.number_of_players}</p>
+        <p>Game ID: {game_id}</p>
+        <p>Players in Room: {players.length}</p>
+      </DetailsContainer>
     </Container>
   );
 }
@@ -64,6 +109,39 @@ const Container = styled("div", {
   flexDirection: "column",
   alignItems: "center",
   color: "white", // put this in theme
+  border: "1px solid white",
+});
+
+const HeaderContainer = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  marginBottom: "1rem",
+  border: "1px solid white",
+});
+
+const PlayerContainer = styled("ul", {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  border: "1px solid white",
+  padding: "0",
+});
+
+const DetailsContainer = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+});
+
+const PlayerDetails = styled("li", {
+  listStyle: "none",
+});
+
+const Avatar = styled("img", {
+  width: "50px",
+  height: "50px",
+  borderRadius: "50%",
 });
 
 export default GameLobby;

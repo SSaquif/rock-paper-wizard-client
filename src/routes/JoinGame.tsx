@@ -11,7 +11,7 @@ import {
   JoinGameForm,
   JoinGameFormSchema,
 } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
-import { joinRPWGame } from "../api/join-game";
+import { joinRPWGame } from "../api/join-rpw-game";
 import { EntryError } from "../types/errors";
 
 export const joinGameAction: ActionFunction = async ({ request }) => {

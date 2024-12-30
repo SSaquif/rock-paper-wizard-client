@@ -10,7 +10,7 @@ import { styled } from "../stitches-theme";
 import BaseButton from "../components/Button";
 // import { useState } from "react";
 // import PLayerSelect from "../components/PlayerSelect";
-import { createNewRPWGame } from "../api/new-game";
+import { createNewRPWGame } from "../api/new-rpw-game";
 // import { queryClient } from "../main";
 import {
   NewGameForm,
