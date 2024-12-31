@@ -4,7 +4,8 @@ import { useParams } from "react-router-dom";
 import { styled } from "@stitches/react";
 import { useQuery } from "@tanstack/react-query";
 import { getRPWGameByID } from "../../api/get-rpw-game";
-
+import BaseButton from "../../components/Button";
+import CSS from "csstype";
 // TODO: make separate components for socket connection and disconnection as per socket io docs
 // TODO: types for everything
 function GameLobby() {
@@ -85,20 +86,27 @@ function GameLobby() {
         <p>${isConnected ? "Connected " : "Disconnected"}</p>
       </HeaderContainer>
       <PlayerContainer>
-        {players.map((p, i) => {
-          return (
-            <PlayerDetails key={`player-${i + 1}`}>
-              <Avatar />
-              <p>{p}</p>
-            </PlayerDetails>
-          );
-        })}
+        {data &&
+          players.map((p, i) => {
+            const colorKey = `player_${i + 1}_color` as keyof typeof data;
+            const playerColor = data[colorKey] as CSS.Property.BackgroundColor;
+            return (
+              <PlayerDetails key={`player_${i + 1}`}>
+                <Avatar css={{ backgroundColor: playerColor }}></Avatar>
+                <p>{p}</p>
+              </PlayerDetails>
+            );
+          })}
       </PlayerContainer>
       <DetailsContainer>
         <p>Number of Players: {data?.number_of_players}</p>
         <p>Game ID: {game_id}</p>
         <p>Players in Room: {players.length}</p>
       </DetailsContainer>
+      <ButtonContainer>
+        <StartGameButton>Start</StartGameButton>
+        <CancelGameButton>Cancel</CancelGameButton>
+      </ButtonContainer>
     </Container>
   );
 }
@@ -128,20 +136,33 @@ const PlayerContainer = styled("ul", {
   padding: "0",
 });
 
+const PlayerDetails = styled("li", {
+  listStyle: "none",
+});
+
+const Avatar = styled("div", {
+  width: "50px",
+  height: "50px",
+  borderRadius: "50%",
+  border: "1px solid white",
+  backgroundColor: "white",
+});
+
 const DetailsContainer = styled("div", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
 });
 
-const PlayerDetails = styled("li", {
-  listStyle: "none",
+const ButtonContainer = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "space-between",
+  border: "1px solid white",
 });
 
-const Avatar = styled("img", {
-  width: "50px",
-  height: "50px",
-  borderRadius: "50%",
-});
+const StartGameButton = styled(BaseButton, {});
+
+const CancelGameButton = styled(BaseButton, {});
 
 export default GameLobby;
