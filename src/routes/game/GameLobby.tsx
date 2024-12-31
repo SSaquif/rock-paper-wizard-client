@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { gameSocket } from "../../adapters/socket";
 import { useParams } from "react-router-dom";
-import { styled } from "@stitches/react";
+import { styled, CSSProperties } from "@stitches/react";
 import { useQuery } from "@tanstack/react-query";
 import { getRPWGameByID } from "../../api/get-rpw-game";
 import BaseButton from "../../components/Button";
-import CSS from "csstype";
+
 // TODO: make separate components for socket connection and disconnection as per socket io docs
 // TODO: types for everything
 function GameLobby() {
@@ -89,7 +89,9 @@ function GameLobby() {
         {data &&
           players.map((p, i) => {
             const colorKey = `player_${i + 1}_color` as keyof typeof data;
-            const playerColor = data[colorKey] as CSS.Property.BackgroundColor;
+            const playerColor = data[
+              colorKey
+            ] as CSSProperties["backgroundColor"];
             return (
               <PlayerDetails key={`player_${i + 1}`}>
                 <Avatar css={{ backgroundColor: playerColor }}></Avatar>
