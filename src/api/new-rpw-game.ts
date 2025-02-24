@@ -2,12 +2,12 @@
 // import { useMutation } from "@tanstack/react-query";
 import {
   NewGameForm,
-  Game,
+  RPWGame,
 } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
 
 export async function createNewRPWGame(
   newGameForm: NewGameForm
-): Promise<Game> {
+): Promise<RPWGame> {
   const res = await fetch("/api/rpw_games/new-game", {
     method: "POST",
     headers: {
@@ -17,7 +17,7 @@ export async function createNewRPWGame(
   });
 
   const data = await res.json();
-  console.log(data);
+  // console.log(data);
   return data;
 }
 

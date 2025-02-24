@@ -8,8 +8,8 @@ import {
 import { styled } from "../stitches-theme";
 import BaseButton from "../components/Button";
 import {
-  JoinGameForm,
-  JoinGameFormSchema,
+  JoinRPWGameForm,
+  JoinRPWGameFormSchema,
 } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
 import { joinRPWGame } from "../api/join-rpw-game";
 import { EntryError } from "../types/errors";
@@ -30,7 +30,7 @@ export const joinGameAction: ActionFunction = async ({ request }) => {
   //     message: "OOps! Something went wrong",
   //   };
   // }
-  const validatedData = JoinGameFormSchema.safeParse(submission);
+  const validatedData = JoinRPWGameFormSchema.safeParse(submission);
   if (!validatedData.success) {
     return {
       isError: true,
@@ -39,7 +39,7 @@ export const joinGameAction: ActionFunction = async ({ request }) => {
   }
 
   // submit data
-  const joinGameEntry: JoinGameForm = {
+  const joinGameEntry: JoinRPWGameForm = {
     gameId: validatedData.data.gameId,
     username: validatedData.data.username,
     password: validatedData.data.password,
