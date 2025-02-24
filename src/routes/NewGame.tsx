@@ -70,7 +70,7 @@ export const newGameAction: ActionFunction = async ({ request }) => {
 
 function NewGame() {
   const navigate = useNavigate();
-  let error = useActionData() as undefined | EntryError;
+  let error = useActionData() as EntryError | undefined;
   console.log("error", error);
   if (!error) {
     error = { isError: false, message: null };

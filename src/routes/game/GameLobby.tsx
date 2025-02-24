@@ -89,9 +89,7 @@ function GameLobby() {
         {data &&
           players.map((p, i) => {
             const colorKey = `player_${i + 1}_color` as keyof typeof data;
-            const playerColor = data[
-              colorKey
-            ] as CSSProperties["backgroundColor"];
+            const playerColor = data[colorKey] as CSSProperties["color"];
             return (
               <PlayerDetails key={`player_${i + 1}`}>
                 <Avatar css={{ backgroundColor: playerColor }}></Avatar>
