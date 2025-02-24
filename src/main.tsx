@@ -10,6 +10,9 @@ import GameLobby from "./routes/game/GameLobby.tsx";
 import GameRoom from "./routes/game/GameRoom.tsx";
 import Notfound from "./routes/NotFound.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Login from "./routes/Login.tsx";
+import Register, { registerAction } from "./routes/Register.tsx";
+import { UserProvider } from "./context/UserContext.tsx";
 
 export const queryClient = new QueryClient();
 
@@ -25,6 +28,15 @@ const router = createBrowserRouter([
       {
         path: "home",
         element: <Home />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+        action: registerAction,
       },
       {
         path: "new-game",
@@ -52,8 +64,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <UserProvider>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </UserProvider>
   </React.StrictMode>
 );
