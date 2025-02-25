@@ -1,5 +1,6 @@
 import { styled } from "@stitches/react";
 import BaseButton from "../components/Button";
+import { Link } from "react-router-dom";
 
 function Login() {
   return (
@@ -10,6 +11,7 @@ function Login() {
       <label htmlFor="password">Password</label>
       <input type="password" name="password" id="password" />
       <BaseButton type="submit">Login</BaseButton>
+      <Link to="/register">Don't have an account? Register Here!</Link>
     </Container>
   );
 }

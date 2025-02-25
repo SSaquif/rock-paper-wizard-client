@@ -6,19 +6,19 @@ import {
   redirect,
 } from "react-router-dom";
 import * as Toast from "@radix-ui/react-toast";
-import { styled } from "../stitches-theme";
-import BaseButton from "../components/Button";
+import { styled } from "../../stitches-theme";
+import BaseButton from "../../components/Button";
 // import { useState } from "react";
 // import PLayerSelect from "../components/PlayerSelect";
-import { createNewRPWGame } from "../api/new-rpw-game";
+import { createNewRPWGame } from "../../api/new-rpw-game";
 // import { queryClient } from "../main";
 import {
-  NewGameForm,
-  NewGameFormSchema,
+  NewRPWGameForm,
+  NewRPWGameFormSchema,
 } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
-import { EntryError } from "../types/errors";
+import { EntryError } from "../../types/errors";
 
-export const newGameAction: ActionFunction = async ({ request }) => {
+export const newRPWGameAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const submission = {
     username: formData.get("username") as string,
@@ -36,7 +36,7 @@ export const newGameAction: ActionFunction = async ({ request }) => {
       message: "OOps! Something went wrong",
     };
   }
-  const validatedData = NewGameFormSchema.safeParse(submission);
+  const validatedData = NewRPWGameFormSchema.safeParse(submission);
   if (!validatedData.success) {
     return {
       isError: true,
@@ -45,7 +45,7 @@ export const newGameAction: ActionFunction = async ({ request }) => {
   }
 
   // submit data
-  const newGameEntry: NewGameForm = {
+  const newGameEntry: NewRPWGameForm = {
     username: validatedData.data.username,
     numOfPlayers: validatedData.data.numOfPlayers,
     password: validatedData.data.password,
@@ -68,7 +68,7 @@ export const newGameAction: ActionFunction = async ({ request }) => {
   return redirect(`/game/${game_id}/lobby`);
 };
 
-function NewGame() {
+function NewRPWGame() {
   const navigate = useNavigate();
   let error = useActionData() as EntryError | undefined;
   console.log("error", error);
@@ -246,4 +246,4 @@ const ToastViewport = styled(Toast.Viewport, {
 // todo: maybe not needed just use BaseButton?
 const Button = styled(BaseButton, {});
 
-export default NewGame;
+export default NewRPWGame;

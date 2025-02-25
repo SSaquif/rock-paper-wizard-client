@@ -1,33 +1,25 @@
-import { styled } from "../stitches-theme";
-import BaseButton from "../components/Button";
+import { useEffect } from "react";
+import { useUser } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { styled } from "@stitches/react";
 
 function Home() {
-  const navigate = useNavigate();
-  function handleNewGame() {
-    navigate("/new-game");
-  }
-  function handleJoinGame() {
-    navigate("/join-game");
-  }
-  return (
-    <Container>
-      <Button onClick={handleNewGame}>New Game</Button>
-      <Button onClick={handleJoinGame}>Join Game</Button>
-    </Container>
-  );
+  const userContext = useUser();
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userContext?.user) {
+      console.log("No user found, redirecting to login");
+      navigate("/login");
+    }
+    return () => {};
+  }, [userContext?.user]);
+
+  return <Container>Home</Container>;
 }
 
 const Container = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
   height: "100%",
-});
-
-const Button = styled(BaseButton, {
-  // border: "1px solid red",
 });
 
 export default Home;

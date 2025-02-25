@@ -1,13 +1,32 @@
-// // Still not sure if I fully want to use this
-// import { createContext } from "react";
+import { createContext, useState, useContext } from "react";
 
-// type AuthContextType = {
-//   user: any;
-// };
+// TODO: think about how this can be typed
+// consider sessions and cookies
+// fix the any typings
+interface IUserContext {
+  user: any;
+  setUser: React.Dispatch<React.SetStateAction<any>>;
+}
 
-// export const AuthContext = createContext<AuthContextType | null>(null);
+export const UserContext = createContext<IUserContext | null>(null);
 
-// export const AuthProvider = () => {
-//   return <AuthContext.Provider value={{}}></AuthContext.Provider>;
-//   //   return <></>;
-// };
+export function UserProvider({ children }: React.PropsWithChildren<{}>) {
+  // might switch to useReducer
+  const [user, setUser] = useState(null);
+
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
+  );
+}
+
+export function useUser() {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error(
+      "useUser must be used in a Component within a UserProvider"
+    );
+  }
+  return context;
+}
