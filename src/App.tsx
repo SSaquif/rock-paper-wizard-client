@@ -2,31 +2,27 @@ import { useEffect } from "react";
 // import globalStyles from "./GlobalStyles";
 import { styled } from "./stitches-theme";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useUser } from "./context/AuthContext";
 function App() {
-  // globalStyles();
-
-  // testing
-  // useEffect(() => {
-  //   const users = fetch("/api/users")
-  //     .then((response) => {
-  //       console.log(response);
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       console.log(data);
-  //     });
-  // }, []);
-
   const location = useLocation();
+  const userContext = useUser();
   const navigate = useNavigate();
 
-  // think there is a better way to do this
   useEffect(() => {
     // console.log("location", location);
-    if (location.pathname === "/") {
+
+    // Check if user is logged in
+    if (!userContext?.user) {
+      console.log("No user found, redirecting to login");
+      navigate("/login");
+    }
+    // Is there a better way to handle this?
+    else if (location.pathname === "/") {
       navigate("/home");
     }
-  }, [location]);
+
+    return () => {};
+  }, [location, userContext?.user]);
 
   return (
     <Container>
