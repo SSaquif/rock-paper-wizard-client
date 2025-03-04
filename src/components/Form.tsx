@@ -1,65 +1,43 @@
 // Using Compound Component pattern
-import { CSSProperties } from "@stitches/react";
-import React, { ReactNode } from "react";
+
+import React, { forwardRef } from "react";
 import {
   Form as ReactRouterForm,
   FormProps as ReactRouterFormProps,
 } from "react-router-dom";
 import { styled } from "../stitches-theme";
 
-/*
- * Primary Component
- * Form
- */
-interface FormProps extends ReactRouterFormProps {
-  children: ReactNode;
-  className?: string; // think this needed for stitches API to work in other components
-  style?: CSSProperties;
+interface FormRowContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  type: "real" | "fake";
 }
 
 /*
- * @todo:
- * I think I should be able do some TS trick to get the props of sub components
- * without having to re-declare them here
+ * @todo: Test to see if useRef works with this pattern
  */
-interface IForm extends React.FC<FormProps> {
-  DataRow: React.FC<
-    {
-      type: "real" | "fake";
-      style?: CSSProperties;
-      className?: string;
-    } & React.PropsWithChildren
-  >;
-  Title: React.FC<{
-    children: string;
-    style?: CSSProperties;
-    className?: string;
-  }>;
-  Label: React.FC<
-    {
-      style?: CSSProperties;
-      className?: string;
-    } & React.LabelHTMLAttributes<HTMLLabelElement>
-  >;
-  Input: React.FC<
-    React.DetailedHTMLProps<
-      React.InputHTMLAttributes<HTMLInputElement>,
-      HTMLInputElement
-    >
-  >;
+interface IForm extends React.FC<ReactRouterFormProps> {
+  DataRow: React.FC<FormRowContainerProps>;
+  Title: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>>;
+  // Input: React.FC<
+  //   React.DetailedHTMLProps<
+  //     React.InputHTMLAttributes<HTMLInputElement>,
+  //     HTMLInputElement
+  //   >
+  // >;
+  Input: React.FC<React.InputHTMLAttributes<HTMLInputElement>>;
 }
 
+/**
+ * Main Form Component
+ */
 const StyledForm = styled(ReactRouterForm, {
-  // base styles if necessary
-  // perhaps stuff for different devices
+  // @todo: perhaps add base styles for responsive design here
+  border: "2px solid gold",
+  padding: "1rem",
 });
 
-const Form: IForm = ({ children, className, ...props }) => {
-  return (
-    <StyledForm className={className} {...props}>
-      {children}
-    </StyledForm>
-  );
+const Form: IForm = ({ children, ...props }) => {
+  return <StyledForm {...props}>{children}</StyledForm>;
 };
 
 /**
@@ -94,15 +72,18 @@ const StyledFormRowContainer = styled("div", {
   },
 });
 
-const FormRowContainer: React.FC<
-  {
-    type: "real" | "fake";
-    style?: CSSProperties;
-    className?: string;
-  } & React.PropsWithChildren
-> = ({ type, style, className, children }) => {
+/**
+ * Sub-component
+ * Container for form data row
+ * @param type - "real" | "fake"
+ */
+const FormRowContainer: React.FC<FormRowContainerProps> = ({
+  type,
+  children,
+  ...props
+}) => {
   return (
-    <StyledFormRowContainer type={type} style={style} className={className}>
+    <StyledFormRowContainer type={type} {...props}>
       {children}
     </StyledFormRowContainer>
   );
@@ -112,18 +93,11 @@ const FormRowContainer: React.FC<
  * Sub-component
  * Form Title
  */
-const StyledFormTitle = styled("h1", {});
-
-const FormTitle: React.FC<{
-  children: string;
-  style?: CSSProperties;
-  className?: string;
-}> = ({ children, style, className }) => {
-  return (
-    <StyledFormTitle style={style} className={className}>
-      {children}
-    </StyledFormTitle>
-  );
+const FormTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({
+  children,
+  ...props
+}) => {
+  return <h1 {...props}>{children}</h1>;
 };
 
 /**
@@ -137,12 +111,11 @@ const StyledFormLabel = styled("label", {
   // minWidth: "max-content",
 });
 
-const FormLabel: React.FC<
-  {
-    style?: CSSProperties;
-    className?: string;
-  } & React.LabelHTMLAttributes<HTMLLabelElement>
-> = ({ children, style, className }) => {
+const FormLabel: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({
+  children,
+  style,
+  className,
+}) => {
   return (
     <StyledFormLabel style={style} className={className}>
       {children}
@@ -160,17 +133,11 @@ const StyledFormInput = styled("input", {
   fontWeight: "900",
 });
 
-const FormInput: React.FC<
-  React.DetailedHTMLProps<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
-  >
-> = ({ children, style, className }) => {
-  return (
-    <StyledFormInput style={style} className={className}>
-      {children}
-    </StyledFormInput>
-  );
+const FormInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({
+  children,
+  ...props
+}) => {
+  return <StyledFormInput {...props}>{children}</StyledFormInput>;
 };
 
 Form.Title = FormTitle;
