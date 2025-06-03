@@ -1,4 +1,4 @@
-import { styled } from "../../stitches-theme";
+// import { styled } from "../../stitches-theme";
 
 function GameRoom() {
   return (
@@ -8,8 +8,8 @@ function GameRoom() {
   );
 }
 
-const Container = styled("div", {
-  height: "100%",
-});
+// const Container = styled("div", {
+//   height: "100%",
+// });
 
 export default GameRoom;

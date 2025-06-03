@@ -1,27 +1,22 @@
 import {
-  RegistrationForm,
-  User,
+  UserRegistrationEntry,
+  AuthenticatedUser,
 } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
 
-// TODO: instead of returning User, return a type that includes the token
-// for now return everything but password but later
-// look into using sessions or tokens etc
-
-type AuthenticatedUser = Omit<User, "password">;
+// @todo: Add to code for handling session
 export async function registerUser(
-  registrationForm: RegistrationForm
+  registrationEntry: UserRegistrationEntry
 ): Promise<AuthenticatedUser> {
   const res = await fetch("/api/users/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(registrationForm),
+    body: JSON.stringify(registrationEntry),
   });
 
-  // TODO: fix "any" type
-  const data = await res.json();
-  // console.log(data);
-  const { user_id, created_at, updated_at } = data;
-  return { user_id, created_at, updated_at };
+  // @todo: see if there is a better way to determine type of response
+  const data = (await res.json()) as AuthenticatedUser;
+  console.log("registerUser data from server", data);
+  return data;
 }

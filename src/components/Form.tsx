@@ -1,6 +1,6 @@
 // Using Compound Component pattern
 
-import React, { forwardRef } from "react";
+import React from "react";
 import {
   Form as ReactRouterForm,
   FormProps as ReactRouterFormProps,
@@ -18,12 +18,6 @@ interface IForm extends React.FC<ReactRouterFormProps> {
   DataRow: React.FC<FormRowContainerProps>;
   Title: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
   Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>>;
-  // Input: React.FC<
-  //   React.DetailedHTMLProps<
-  //     React.InputHTMLAttributes<HTMLInputElement>,
-  //     HTMLInputElement
-  //   >
-  // >;
   Input: React.FC<React.InputHTMLAttributes<HTMLInputElement>>;
 }
 

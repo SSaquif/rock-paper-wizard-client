@@ -4,14 +4,14 @@ import App from "./App.tsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./routes/Home.tsx";
-import RPWHome from "./routes/rpw-game/RPWHome.tsx";
+// import RPWHome from "./routes/rpw-game/RPWHome.tsx";
 import NewRPWGame, { newRPWGameAction } from "./routes/rpw-game/NewRPWGame.tsx";
 import JoinGame, { joinGameAction } from "./routes/JoinGame.tsx";
 import GameLobby from "./routes/rpw-game/RPWGameLobby.tsx";
 import GameRoom from "./routes/rpw-game/RPWGameRoom.tsx";
 import Notfound from "./routes/NotFound.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Login from "./routes/Login.tsx";
+import Login, { loginAction } from "./routes/Login.tsx";
 import Register, { registerAction } from "./routes/Register.tsx";
 import { UserProvider } from "./context/AuthContext.tsx";
 
@@ -33,6 +33,7 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <Login />,
+        action: loginAction,
       },
       {
         path: "register",

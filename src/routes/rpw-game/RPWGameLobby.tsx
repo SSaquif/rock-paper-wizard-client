@@ -17,7 +17,10 @@ function GameLobby() {
     return <p>Game ID not</p>;
   }
 
-  const { data, error, isLoading, isError } = useQuery({
+  const {
+    data,
+    //error, isLoading, isError
+  } = useQuery({
     queryKey: ["rpwGameFromID", game_id],
     queryFn: () => getRPWGameByID(game_id),
   });

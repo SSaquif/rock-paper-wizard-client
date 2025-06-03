@@ -1,12 +1,12 @@
 // apparently don't need with remix anymore
 // import { useMutation } from "@tanstack/react-query";
 import {
-  NewGameForm,
+  NewRPWGameForm,
   RPWGame,
 } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
 
 export async function createNewRPWGame(
-  newGameForm: NewGameForm
+  newGameForm: NewRPWGameForm
 ): Promise<RPWGame> {
   const res = await fetch("/api/rpw_games/new-game", {
     method: "POST",

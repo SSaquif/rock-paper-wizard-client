@@ -11,18 +11,19 @@ function App() {
   useEffect(() => {
     // console.log("location", location);
 
-    // Check if user is logged in
-    if (!userContext?.user) {
+    const isAuthPage =
+      location.pathname === "/login" || location.pathname === "/register";
+
+    if (!userContext?.user && !isAuthPage) {
       console.log("No user found, redirecting to login");
       navigate("/login");
     }
-    // Is there a better way to handle this?
-    else if (location.pathname === "/") {
-      navigate("/home");
-    }
+    // else if (location.pathname === "/") {
+    //   navigate("/home");
+    // }
 
     return () => {};
-  }, [location, userContext?.user]);
+  }, [location.pathname, userContext?.user]);
 
   return (
     <Container>

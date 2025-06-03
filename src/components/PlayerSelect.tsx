@@ -1,8 +1,8 @@
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { useState } from "react";
+// import { useState } from "react";
 
 function PLayerSelect() {
-  const [noOfPlayers, setNoOfPlayers] = useState(2);
+  // const [noOfPlayers, setNoOfPlayers] = useState(2);
   return (
     <SelectPrimitive.Root>
       <SelectPrimitive.SelectTrigger aria-label="number of players">
@@ -39,8 +39,8 @@ function PLayerSelect() {
   );
 }
 
-function SelectItem() {
-  return <SelectPrimitive.SelectItem value="1">1</SelectPrimitive.SelectItem>;
-}
+// function SelectItem() {
+//   return <SelectPrimitive.SelectItem value="1">1</SelectPrimitive.SelectItem>;
+// }
 
 export default PLayerSelect;
