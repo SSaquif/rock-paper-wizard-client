@@ -3,33 +3,51 @@ import { useEffect } from "react";
 import { styled } from "./stitches-theme";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { isValidSession, useAuthContext } from "./context/AuthContext";
+import { Session } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
 
 function App() {
   const location = useLocation();
-  const { auth } = useAuthContext();
+  const { auth, setAuth } = useAuthContext();
   const navigate = useNavigate();
 
+  //on initial load, see if user is logged in using session_id cookie
   useEffect(() => {
-    // console.log("location", location);
+    const fetchSession = async () => {
+      try {
+        // might be good to add a abort controller here
+        const res = await fetch("/api/users/session", {
+          credentials: "include",
+        });
+        if (res.ok) {
+          const data = (await res.json()) as {
+            isError: false;
+            session: Session;
+          };
+          if (data && data.session) {
+            setAuth(data.session);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching session:", error);
+        setAuth(null);
+      }
+    };
+    fetchSession();
+  }, []);
 
+  useEffect(() => {
     const isAuthPage =
       location.pathname === "/login" || location.pathname === "/register";
-
     const currentSession = auth;
     const hasSession = isValidSession(currentSession);
-    console.log("auth in App", auth);
-    console.log("hasSession", hasSession);
-    /**
-     * If not logged in and not on an auth page, redirect to login
-     */
-    // if (!AuthContext?.auth?.user_id && !isAuthPage) {
+
     if (!hasSession && !isAuthPage) {
       console.log("No user found, redirecting to login");
       navigate("/login");
+    } else if (hasSession && isAuthPage) {
+      console.log("User found, redirecting to home");
+      navigate("/home");
     }
-    // else if (location.pathname === "/") {
-    //   navigate("/home");
-    // }
 
     return () => {};
   }, [location.pathname, auth]);

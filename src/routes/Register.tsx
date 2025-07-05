@@ -1,38 +1,13 @@
 import { styled } from "@stitches/react";
 import BaseButton from "../components/Button";
-import {
-  // Form,
-  useNavigate,
-  ActionFunction,
-  useActionData,
-  useLocation,
-} from "react-router-dom";
-import {
-  AuthenticatedUser,
-  SYSTEM_ERRORS,
-  // consider renaming in api-types-and-schema or maybe Regitration Entry
-  UserRegistrationEntry,
-  UserRegistrationFormSchema,
-} from "@ssaquif/rock-paper-wizard-api-types-and-schema";
-import { registerUser } from "../api/register-user";
+import { useNavigate, redirect } from "react-router-dom";
 import { useEffect } from "react";
-import { useAuthContext } from "../context/AuthContext";
+import { isValidSession, useAuthContext } from "../context/AuthContext";
 import Form from "../components/Form";
 
 function Register() {
   const navigate = useNavigate();
-  // @todo: Maybe not use null as the initial value
-  const authContext = useAuthContext();
-  const location = useLocation();
-
-  console.log("location", location);
-  const isAuthPage =
-    location.pathname === "/login" || location.pathname === "/register";
-  console.log("isAuthPage", isAuthPage);
-  console.log("test", !authContext?.auth && !isAuthPage);
-
-  //@todo: Error handling to be used with toast
-  let actionData = useActionData() as AuthenticatedUser | undefined;
+  const { auth } = useAuthContext();
 
   function handleCancel() {
     navigate("/login");
@@ -40,21 +15,10 @@ function Register() {
 
   // if user is already logged in, redirect to home
   useEffect(() => {
-    // if (authContext?.user) {
-    //   navigate("/home");
-    // }
-  }, [authContext]);
-
-  useEffect(() => {
-    //   //@todo: Add the relevant user data to the session or context
-    //   //@todo: Add data to state
-    // if (authContext) {
-    //   authContext.setUser(actionData);
-    // }
-    // if (!actionData?.isError) {
-    //   navigate("/home");
-    // }
-  }, [actionData]);
+    if (auth && isValidSession(auth)) {
+      redirect("/home");
+    }
+  }, [auth]);
 
   return (
     <FormContainer>
