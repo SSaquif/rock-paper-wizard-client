@@ -2,10 +2,11 @@ import { useEffect } from "react";
 // import globalStyles from "./GlobalStyles";
 import { styled } from "./stitches-theme";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { useUser } from "./context/AuthContext";
+import { isValidSession, useAuthContext } from "./context/AuthContext";
+
 function App() {
   const location = useLocation();
-  const userContext = useUser();
+  const { auth } = useAuthContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,7 +15,15 @@ function App() {
     const isAuthPage =
       location.pathname === "/login" || location.pathname === "/register";
 
-    if (!userContext?.user && !isAuthPage) {
+    const currentSession = auth;
+    const hasSession = isValidSession(currentSession);
+    console.log("auth in App", auth);
+    console.log("hasSession", hasSession);
+    /**
+     * If not logged in and not on an auth page, redirect to login
+     */
+    // if (!AuthContext?.auth?.user_id && !isAuthPage) {
+    if (!hasSession && !isAuthPage) {
       console.log("No user found, redirecting to login");
       navigate("/login");
     }
@@ -23,7 +32,7 @@ function App() {
     // }
 
     return () => {};
-  }, [location.pathname, userContext?.user]);
+  }, [location.pathname, auth]);
 
   return (
     <Container>
