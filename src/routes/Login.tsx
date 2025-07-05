@@ -1,70 +1,20 @@
-import {
-  // useNavigate,
-  ActionFunction,
-  // useActionData,
-  // redirect,
-  Link,
-} from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 // import * as Toast from "@radix-ui/react-toast";
 import { styled } from "../stitches-theme";
 // import { EntryError } from "../types/errors";
 import BaseButton from "../components/Button";
 import Form from "../components/Form";
-import {
-  AuthenticatedUser,
-  LoginFormSchema,
-  SYSTEM_ERRORS,
-} from "@ssaquif/rock-paper-wizard-api-types-and-schema";
-import { loginUser } from "../api/login-user";
-
-export const loginAction: ActionFunction = async ({
-  request,
-}): Promise<AuthenticatedUser> => {
-  const formData = await request.formData();
-  const submission = {
-    username: formData.get("username") as string,
-    password: formData.get("password") as string,
-    catcher: formData.get("catcher") as string,
-  };
-  console.log("Login submission", submission);
-
-  // field validations
-  if (submission.catcher) {
-    return {
-      isError: true,
-      error: SYSTEM_ERRORS.HIDDEN_FIELD_NOT_EMPTY,
-    };
-  }
-  const validatedData = LoginFormSchema.safeParse(submission);
-  if (!validatedData.success) {
-    return {
-      isError: true,
-      error: SYSTEM_ERRORS.ZOD_SCHEMA_VALIDATION_ERROR,
-      message: validatedData.error.issues[0].message,
-    };
-  }
-
-  // submit data
-  const loginData = {
-    username: validatedData.data.username,
-    password: validatedData.data.password,
-  };
-  console.log("Login data", loginData);
-  const data = await loginUser(loginData);
-
-  //@todo: see the comments on cache invalidation in NewGame.tsx
-  if (!data) {
-    return {
-      isError: true,
-      error: SYSTEM_ERRORS.GENERIC_ERROR,
-    };
-  }
-  //@todo: update endpoint to handle server errors
-  return data;
-};
+import { useEffect } from "react";
+import { isValidSession, useAuthContext } from "../context/AuthContext";
 
 function Login() {
-  // const navigate = useNavigate();
+  const { auth } = useAuthContext();
+
+  useEffect(() => {
+    if (auth && isValidSession(auth)) {
+      redirect("/home");
+    }
+  }, [auth]);
 
   return (
     <Container>
