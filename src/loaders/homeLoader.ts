@@ -1,6 +1,8 @@
-import { AuthenticatedSession } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
+import {
+  AuthenticatedSession,
+  AuthenticatedSessionSchema,
+} from "@ssaquif/rock-paper-wizard-api-types-and-schema";
 import { LoaderFunction, redirect } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext";
 
 const homeLoader: LoaderFunction = async ({
   request,
@@ -13,16 +15,14 @@ const homeLoader: LoaderFunction = async ({
   if (res.status === 401) {
     throw redirect("/login");
   }
-  const data = (await res.json()) as AuthenticatedSession;
+  const raw = await res.json();
 
-  // was having some zod issues
-  // so commenting this out for now
-  //   const parsed = AuthenticatedSessionSchema.safeParse(raw);
-  //   if (!parsed.success) {
-  //     console.error("Zod session validation failed:", parsed.error);
-  //     throw redirect("/login");
-  //   }
-  //   const data = parsed.data;
+  const parsed = AuthenticatedSessionSchema.safeParse(raw);
+  if (!parsed.success) {
+    console.error("Zod session validation failed:", parsed.error);
+    throw redirect("/login");
+  }
+  const data = parsed.data;
 
   if (data.isError) {
     // @todo: handle error properly
