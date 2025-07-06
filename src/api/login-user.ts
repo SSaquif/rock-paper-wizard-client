@@ -7,7 +7,11 @@ import {
 
 export async function loginUser(
   loginEntry: LoginEntry
-): Promise<AuthenticatedUser> {
+  // @todo: this probably doen't need to return user info now
+  // since we are using session cookies
+  // fix the any type and figure out what i should actually return
+  // from the server, may just a response with a success message
+): Promise<any> {
   const res = await fetch("/api/users/login", {
     method: "POST",
     headers: {
