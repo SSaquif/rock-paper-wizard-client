@@ -48,6 +48,7 @@ const registerAction: ActionFunction = async ({
   const data = await registerUser(userRegistrationEntry);
 
   //@todo: see the comments on cache invalidation in NewGame.tsx
+  // also maybe change generic error to a more specific one
   if (!data) {
     return {
       isError: true,

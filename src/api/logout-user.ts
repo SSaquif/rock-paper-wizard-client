@@ -6,6 +6,7 @@ import {
 export async function logoutUser(): Promise<any> {
   const res = await fetch("/api/users/logout", {
     method: "POST",
+    credentials: "include", // Include cookies for session management
     headers: {
       "Content-Type": "application/json",
     },
