@@ -1,6 +1,6 @@
 import { styled } from "@stitches/react";
 import BaseButton from "../components/Button";
-import { useNavigate, redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { isValidSession, useAuthContext } from "../context/AuthContext";
 import Form from "../components/Form";
@@ -16,7 +16,7 @@ function Register() {
   // if user is already logged in, redirect to home
   useEffect(() => {
     if (auth && isValidSession(auth)) {
-      redirect("/home");
+      navigate("/home");
     }
   }, [auth]);
 

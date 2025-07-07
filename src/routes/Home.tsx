@@ -1,12 +1,13 @@
 import { Session } from "@ssaquif/rock-paper-wizard-api-types-and-schema";
 import { styled } from "@stitches/react";
-import { useLoaderData, redirect } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import { useEffect } from "react";
 import Button from "../components/Button";
 import { logoutUser } from "../api/logout-user";
 
 function Home() {
+  const navigate = useNavigate();
   const data = useLoaderData() as { isError: false; session: Session };
   const { setAuth } = useAuthContext();
 
@@ -26,7 +27,7 @@ function Home() {
     }
     console.log("Logout successful:", data.message);
     setAuth(null); // Clear auth context
-    redirect("/login");
+    navigate("/login");
   }
 
   return (

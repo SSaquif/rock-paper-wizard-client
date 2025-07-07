@@ -1,4 +1,4 @@
-import { Link, redirect } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import * as Toast from "@radix-ui/react-toast";
 import { styled } from "../stitches-theme";
 // import { EntryError } from "../types/errors";
@@ -8,11 +8,12 @@ import { useEffect } from "react";
 import { isValidSession, useAuthContext } from "../context/AuthContext";
 
 function Login() {
+  const navigate = useNavigate();
   const { auth } = useAuthContext();
 
   useEffect(() => {
     if (auth && isValidSession(auth)) {
-      redirect("/home");
+      navigate("/home");
     }
   }, [auth]);
 
